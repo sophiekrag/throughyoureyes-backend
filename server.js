@@ -4,9 +4,17 @@ const express = require("express")
 
 const app = express()
 
-app.get("/", (req, res) => {
-    res.send("Hello There")
-})
+//setup db 
+require('./config/db.config')
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+app.use('/', require('./routes/auth.routes'))
+
+// app.get("/", (req, res) => {
+//     res.send("Hello There")
+// })
 
 app.listen(
     process.env.PORT, 
