@@ -22,9 +22,11 @@ const userSchema = new Schema(
         },
         stories: {
             type: [{ type: Schema.Types.ObjectId, ref: "Story"}],
+        },    
+    },
+        {
+        timestamps: true,
         },
-        timestamp: true,
-    }
 )
 
 module.exports = model("User", userSchema)
