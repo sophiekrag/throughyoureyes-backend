@@ -11,7 +11,7 @@ router.get("/api/signup", (req, res) => {
 });
 
 router.post("/api/signup", async (req, res) => {
-  const { username, email, password } = req.body;
+  const { userData: { username, email, password },} = req.body;
   try {
     if (!username || !email || !password) {
       return res.status(422).send("All fields are required");
