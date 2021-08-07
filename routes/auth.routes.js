@@ -46,12 +46,12 @@ router.post("/api/signup", async (req, res) => {
 });
 
 //------Login------
-router.get("api/login", (req, res) => {
+router.get("/api/login", (req, res) => {
   res.send("Hello login");
 });
 
-router.post("api/login", async (req, res) => {
-  const { email, password } = req.body;
+router.post("/api/login", async (req, res) => {
+  const { userData: { email, password },} = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) {
