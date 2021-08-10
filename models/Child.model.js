@@ -26,8 +26,10 @@ const childSchema = new Schema(
         stories: {
             type: [{ type: Schema.Types.ObjectId, ref: "Story"}],
         },
-        timestamp: true,
-    }
+    },
+    {
+        timestamps: true,
+    }, 
 )
 
 module.exports = model("Child", childSchema)
