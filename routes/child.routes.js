@@ -1,11 +1,13 @@
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken") ;
 
 const router = new Router();
 
 const Child = require("../models/Child.model");
-const User = require("../models/User.model");
 
+
+//------Create------
 router.get("/api/createchild", (req, res) => {
   res.send("Hello createchild");
 });
@@ -48,6 +50,31 @@ router.post("/api/createchild", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Error signing up user. Please try again later");
+  }
+});
+
+//------Login------
+router.get("/api/child/login", (req, res) => {
+  res.send("Hello child login");
+});
+
+router.post("/api/child/login", async (req, res) => {
+  const { childData: { username, password },} = req.body;
+  try {
+    const child = await Child.findOne({ username });
+    if (!child) {
+      return res.status(404).send("No child exists with that username");
+    }
+    const passwordMatch = bcrypt.compareSync(password, child.password);
+    if (passwordMatch) {
+      const token = jwt.sign({ childId: child._id}, process.env.JWT_SECRET, {
+        expiresIn: "7d"
+      })
+      res.status(200).json(token)
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error loggin in child. Please try again later");
   }
 });
 
