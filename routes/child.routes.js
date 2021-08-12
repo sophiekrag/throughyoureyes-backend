@@ -1,11 +1,11 @@
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken") ;
+const jwt = require("jsonwebtoken");
 
 const router = new Router();
 
 const Child = require("../models/Child.model");
-
+const User = require("../models/User.model");
 
 //------Create------
 router.get("/api/createchild", (req, res) => {
@@ -45,6 +45,10 @@ router.post("/api/createchild", async (req, res) => {
       lastname,
       password: hash,
     });
+    await User.findByIdAndUpdate(
+      { _id: req.session.user._id },
+      { $push: { children: newChild._id } }
+    );
     console.log(`Created new child ${newChild}`);
     res.status(201).send("New child is created");
   } catch (error) {
@@ -59,7 +63,9 @@ router.get("/api/child/login", (req, res) => {
 });
 
 router.post("/api/child/login", async (req, res) => {
-  const { childData: { username, password },} = req.body;
+  const {
+    childData: { username, password },
+  } = req.body;
   try {
     const child = await Child.findOne({ username });
     if (!child) {
@@ -67,10 +73,10 @@ router.post("/api/child/login", async (req, res) => {
     }
     const passwordMatch = bcrypt.compareSync(password, child.password);
     if (passwordMatch) {
-      const token = jwt.sign({ childId: child._id}, process.env.JWT_SECRET, {
-        expiresIn: "7d"
-      })
-      res.status(200).json(token)
+      const token = jwt.sign({ childId: child._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.status(200).json(token);
     }
   } catch (error) {
     console.error(error);
@@ -78,4 +84,24 @@ router.post("/api/child/login", async (req, res) => {
   }
 });
 
-module.exports = router
+router.post("/api/findChild", async (req, res) => {
+  const { id } = req.body;
+  try {
+     const child = await Child.findById({ _id: id });
+    if (child) {
+      await User.findByIdAndUpdate(
+        { _id: req.session.user._id },
+        { $push: { children: child._id } }
+      );
+      res.status(200).send("Succesfully connected to child")
+    } else {
+      return res.status(404).send("No child exists with that username")
+    }
+    console.log(req.body)
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error finding child. Please try again later")
+  }
+});
+
+module.exports = router;

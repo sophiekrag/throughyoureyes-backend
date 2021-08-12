@@ -40,6 +40,7 @@ router.post("/api/signup", async (req, res) => {
       password: hash,
     });
     console.log(`Created new user ${newUser}`);
+    req.session.user = user
     const token = jwt.sign({ userId: newUser._id}, process.env.JWT_SECRET, {
       expiresIn: "100d"
     })
@@ -64,9 +65,12 @@ router.post("/api/login", async (req, res) => {
     }
     const passwordMatch = bcrypt.compareSync(password, user.password);
     if (passwordMatch) {
-      const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET, {
-        expiresIn: "100d"
-      })
+      req.session.user = user
+      // const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET, {
+      //   expiresIn: "100d",
+      // })
+      console.log(user, "User")
+      console.log(req.session, "User login session")
       res.status(200).json(token)
     }
   } catch (error) {
