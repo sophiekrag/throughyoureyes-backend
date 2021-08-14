@@ -84,6 +84,7 @@ router.post("/api/child/login", async (req, res) => {
   }
 });
 
+//------Connect------
 router.post("/api/findChild", async (req, res) => {
   const { id } = req.body;
   try {
@@ -95,7 +96,7 @@ router.post("/api/findChild", async (req, res) => {
       );
       res.status(200).send("Succesfully connected to child")
     } else {
-      return res.status(404).send("No child exists with that username")
+      return res.status(404).send("No child exists with that id")
     }
     console.log(req.body)
   } catch (error) {
