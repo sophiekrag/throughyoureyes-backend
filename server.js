@@ -18,6 +18,7 @@ app.use(cors({
 
 app.use("/", require("./routes/auth.routes"));
 app.use("/", require("./routes/child.routes"));
+app.use("/", require("./routes/user.routes"));
 
 app.listen(
   process.env.PORT,
