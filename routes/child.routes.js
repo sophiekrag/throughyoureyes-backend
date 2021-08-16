@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 const router = new Router();
 
@@ -73,10 +72,8 @@ router.post("/api/child/login", async (req, res) => {
     }
     const passwordMatch = bcrypt.compareSync(password, child.password);
     if (passwordMatch) {
-      const token = jwt.sign({ childId: child._id }, process.env.JWT_SECRET, {
-        expiresIn: "7d",
-      });
-      res.status(200).json(token);
+      req.session.child = child
+      res.status(200).json(Child)
     }
   } catch (error) {
     console.error(error);
