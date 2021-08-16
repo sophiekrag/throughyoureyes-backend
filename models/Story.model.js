@@ -1,23 +1,25 @@
-const { Schema, model } = require("mongoose")
+const { Schema, model } = require("mongoose");
 
 const storySchema = new Schema(
-    {
-        title: {
-            type: String,
-            required: true,
-        },
-        description: {
-            type: String,
-            required: true,
-        },
-        mediaUrl: {
-            type: String,
-        },
-        creator: {
-            type: [{ type: Schema.Types.ObjectId, ref: "User"}],
-        },
-        timestamp: true,
-    }
-)
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    media: {
+        type: String, 
+    },
+    creator: {
+      type: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = model("Story", storySchema)
+module.exports = model("Story", storySchema);
