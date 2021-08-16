@@ -4,6 +4,7 @@ const router = new Router();
 
 //const Child = require("../models/Child.model");
 const User = require("../models/User.model");
+const Story = require("../models/Story.model");
 
 //------Get my children------
 router.get("/api/myChildren", async (req, res) => {
@@ -16,6 +17,32 @@ router.get("/api/myChildren", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Error getting data. Please try again later");
+  }
+});
+
+//------Create story------
+router.post("/api/createStory", async (req, res) => {
+  console.log("Connected to createStory")
+  const { storyData: { title, description, media },} = req.body;
+  try {
+    if (!title || !description) {
+      return res.status(422).json("Title or description is missing");
+    }
+    const newStory = await Story.create({
+      title,
+      description,
+      media,
+      creator: req.session.user._id,
+    })
+    await User.findByIdAndUpdate(
+      { _id: req.session.user._id },
+      { $push: { stories: newStory._id } }
+    );
+    console.log(`Created new story ${newStory}`);
+    res.status(201).send("New story is created");
+  } catch (error) {
+    console.log(error)
+    res.status(500).send("Error creating story. Please try again later")
   }
 });
 
