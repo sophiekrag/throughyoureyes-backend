@@ -16,6 +16,9 @@ const storySchema = new Schema(
     creator: {
       type: [{ type: Schema.Types.ObjectId, ref: "User" }],
     },
+    child: {
+      type: [{ type: Schema.Types.ObjectId, ref: "Child" }]
+    }
   },
   {
     timestamps: true,
