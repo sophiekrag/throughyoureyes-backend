@@ -46,4 +46,18 @@ router.post("/api/createStory", async (req, res) => {
   }
 });
 
+//------Get my stories------
+router.get("/api/myStories", async (req, res) => {
+  try {
+    const result = await User.findById(req.session.user._id).populate(
+      "stories"
+    );
+    console.log(result);
+    res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error getting data. Please try again later");
+  }
+});
+
 module.exports = router;
