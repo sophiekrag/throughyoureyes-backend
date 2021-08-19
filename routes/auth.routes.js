@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken")
 
 
 const router = new Router();
@@ -41,7 +42,10 @@ router.post("/api/signup", async (req, res) => {
     });
     console.log(`Created new user ${newUser}`);
     req.session.user = user
-    res.status(201).json(user)
+    const token = jwt.sign({ userId: newUser._id}, process.env.JWT_SECRET, {
+      expiresIn: "100d"
+    })
+    res.status(201).json(token)
   } catch (error) {
     console.error(error);
     res.status(500).send("Error signing up user. Please try again later");
@@ -49,9 +53,6 @@ router.post("/api/signup", async (req, res) => {
 });
 
 //------Login------
-router.get("/api/login", (req, res) => {
-  res.send("Hello login");
-});
 
 router.post("/api/login", async (req, res) => {
   const { userData: { email, password },} = req.body;
@@ -65,7 +66,10 @@ router.post("/api/login", async (req, res) => {
       req.session.user = user
       console.log(user, "User")
       console.log(req.session, "User login session")
-      res.status(200).json(user)
+      const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET, {
+        expiresIn: "100d"
+      })
+      res.status(201).json(token)
     }
   } catch (error) {
     console.error(error);

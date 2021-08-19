@@ -68,4 +68,16 @@ router.get("/api/myStories", async (req, res) => {
   }
 });
 
+router.get("/api/storyDetails/:id", async (req, res) => {
+  const { id } = req.params
+  console.log(id)
+  try {
+    const result = await Story.findById(id)
+    console.log(result);
+    res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error getting data. Please try again later");
+  }
+});
 module.exports = router;
