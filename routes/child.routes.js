@@ -48,7 +48,6 @@ router.post("/api/createchild", async (req, res) => {
       { _id: req.session.user._id },
       { $push: { children: newChild._id } }
     );
-    console.log(`Created new child ${newChild}`);
     res.status(201).send("New child is created");
   } catch (error) {
     console.error(error);
@@ -72,8 +71,8 @@ router.post("/api/child/login", async (req, res) => {
     }
     const passwordMatch = bcrypt.compareSync(password, child.password);
     if (passwordMatch) {
-      req.session.child = child
-      res.status(200).json(Child)
+      req.session.child = child;
+      res.status(200).json(Child);
     }
   } catch (error) {
     console.error(error);
@@ -85,20 +84,19 @@ router.post("/api/child/login", async (req, res) => {
 router.post("/api/findChild", async (req, res) => {
   const { id } = req.body;
   try {
-     const child = await Child.findById({ _id: id });
+    const child = await Child.findById({ _id: id });
     if (child) {
       await User.findByIdAndUpdate(
         { _id: req.session.user._id },
         { $push: { children: child._id } }
       );
-      res.status(200).send("Succesfully connected to child")
+      res.status(200).send("Succesfully connected to child");
     } else {
-      return res.status(404).send("No child exists with that id")
+      return res.status(404).send("No child exists with that id");
     }
-    console.log(req.body)
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error finding child. Please try again later")
+    res.status(500).send("Error finding child. Please try again later");
   }
 });
 
