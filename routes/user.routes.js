@@ -65,14 +65,27 @@ router.get("/api/myStories", async (req, res) => {
   }
 });
 
+//------Details story------
 router.get("/api/storyDetails/:id", async (req, res) => {
   const { id } = req.params
   try {
-    const result = await Story.findById(id)
+    const result = await Story.findById(id).populate("child")
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error getting data. Please try again later");
   }
 });
+
+//------Edit story------
+router.post("/api/editStory", async (req, res) => {
+  const {storyData: input, storyId} = req.body;
+  try {
+    const newData = await Story.findByIdAndUpdate(storyId, input, {new: true})
+    res.status(200).json(newData)
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error edeting story. Please try again later");
+  }
+})
 module.exports = router;
