@@ -12,7 +12,6 @@ router.get("/api/myChildren", async (req, res) => {
     const result = await User.findById(req.session.user._id).populate(
       "children"
     );
-    console.log(result);
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
@@ -46,7 +45,6 @@ router.post("/api/createStory", async (req, res) => {
       { _id: req.session.user._id },
       { $push: { stories: newStory._id } }
     );
-    console.log(`Created new story ${newStory}`);
     res.status(201).send("New story is created");
   } catch (error) {
     console.log(error);
@@ -60,7 +58,6 @@ router.get("/api/myStories", async (req, res) => {
     const result = await User.findById(req.session.user._id).populate(
       "stories",
     );
-    console.log(result);
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
@@ -70,10 +67,8 @@ router.get("/api/myStories", async (req, res) => {
 
 router.get("/api/storyDetails/:id", async (req, res) => {
   const { id } = req.params
-  console.log(id)
   try {
     const result = await Story.findById(id)
-    console.log(result);
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
