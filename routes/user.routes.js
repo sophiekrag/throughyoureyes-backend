@@ -79,13 +79,15 @@ router.get("/api/storyDetails/:id", async (req, res) => {
 
 //------Edit story------
 router.post("/api/editStory", async (req, res) => {
-  const {storyData: input, storyId} = req.body;
+  const {storyData: {input, media: mediaUrl}, storyId} = req.body;
+  console.log(mediaUrl)
   try {
-    const newData = await Story.findByIdAndUpdate(storyId, input, {new: true})
+    const newData = await Story.findByIdAndUpdate(storyId, {input, media: mediaUrl }, {new: true})
     res.status(200).json(newData)
   } catch (error) {
     console.error(error);
     res.status(500).send("Error edeting story. Please try again later");
   }
 })
+
 module.exports = router;
