@@ -90,4 +90,24 @@ router.post("/api/editStory", async (req, res) => {
   }
 })
 
+//------Delete story------
+router.post("/api/deleteStory/:id", async (req, res) => {
+  const { id } = req.params;
+  const {childId} = req.body
+  console.log(childId)
+  try {
+    await User.findByIdAndUpdate(req.session.user._id, {
+      $pull: { stories: id },
+    });
+    await Child.findByIdAndUpdate(childId, {
+      $pull: { stories: id },
+    })
+    await Story.findByIdAndDelete(id);
+    res.status(200).send("Succesfully deleted story")
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error deleting data. Please try again later");
+  }
+});
+
 module.exports = router;
