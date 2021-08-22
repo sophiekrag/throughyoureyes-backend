@@ -100,4 +100,14 @@ router.post("/api/findChild", async (req, res) => {
   }
 });
 
+router.get("/api/getChild/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const child = await Child.findById({ _id: id });
+       res.status(200).json(child);
+  } catch (error) {
+    res.status(500).send("Error finding child. Please try again later")
+  }
+});
+
 module.exports = router;
