@@ -1,19 +1,15 @@
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken")
-
 
 const router = new Router();
 
 const User = require("../models/User.model");
 
 //------Signup------
-router.get("/api/signup", (req, res) => {
-  res.send("Hello");
-});
-
 router.post("/api/signup", async (req, res) => {
-  const { userData: { username, email, password },} = req.body;
+  const {
+    userData: { username, email, password },
+  } = req.body;
   try {
     if (!username || !email || !password) {
       return res.status(422).send("All fields are required");
@@ -40,11 +36,8 @@ router.post("/api/signup", async (req, res) => {
       email,
       password: hash,
     });
-    req.session.user = user
-    const token = jwt.sign({ userId: newUser._id}, process.env.JWT_SECRET, {
-      expiresIn: "100d"
-    })
-    res.status(201).json(token)
+    req.session.user = user;
+    res.status(201).json(user);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error signing up user. Please try again later");
@@ -54,7 +47,9 @@ router.post("/api/signup", async (req, res) => {
 //------Login------
 
 router.post("/api/login", async (req, res) => {
-  const { userData: { email, password },} = req.body;
+  const {
+    userData: { email, password },
+  } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -62,11 +57,8 @@ router.post("/api/login", async (req, res) => {
     }
     const passwordMatch = bcrypt.compareSync(password, user.password);
     if (passwordMatch) {
-      req.session.user = user
-      const token = jwt.sign({ userId: user._id}, process.env.JWT_SECRET, {
-        expiresIn: "100d"
-      })
-      res.status(201).json(token)
+      req.session.user = user;
+      res.status(201).json(user);
     }
   } catch (error) {
     console.error(error);
@@ -77,7 +69,16 @@ router.post("/api/login", async (req, res) => {
 //------Logout------
 router.post("/api/logout", (req, res) => {
   delete req.session.user;
-  res.status(200).json("User is logged out")
-})
+  res.status(200).json("User is logged out");
+});
+
+//------CheckAuth------
+router.get("/api/checkAuth", (req, res) => {
+  const user = req.session.user;
+  if (!user) {
+    return res.status(404).send("ERROR");
+  }
+  res.status(200).json(user);
+});
 
 module.exports = router;
