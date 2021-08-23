@@ -19,6 +19,18 @@ router.get("/api/myChildren", async (req, res) => {
   }
 });
 
+//------Get child------
+router.get("/api/getChild/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await Child.findById({ _id: id });
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error getting data. Please try again later");
+  }
+});
+
 //------Create story------
 router.post("/api/createStory", async (req, res) => {
   console.log("Connected to createStory");
@@ -35,7 +47,7 @@ router.post("/api/createStory", async (req, res) => {
       description,
       media,
       creator: req.session.user._id,
-      child: req.body.childId
+      child: req.body.childId,
     });
     await Child.findByIdAndUpdate(
       { _id: childId },
@@ -56,7 +68,7 @@ router.post("/api/createStory", async (req, res) => {
 router.get("/api/myStories", async (req, res) => {
   try {
     const result = await User.findById(req.session.user._id).populate(
-      "stories",
+      "stories"
     );
     res.status(201).json(result);
   } catch (error) {
@@ -67,9 +79,9 @@ router.get("/api/myStories", async (req, res) => {
 
 //------Details story------
 router.get("/api/storyDetails/:id", async (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
   try {
-    const result = await Story.findById(id).populate("child")
+    const result = await Story.findById(id).populate("child");
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
@@ -79,35 +91,35 @@ router.get("/api/storyDetails/:id", async (req, res) => {
 
 //------Edit story------
 router.post("/api/editStory", async (req, res) => {
-  const {storyData: {input, media: mediaUrl}, storyId} = req.body;
-  console.log(mediaUrl)
+  const { input, storyId } = req.body;
+  console.log(input);
   try {
-    const newData = await Story.findByIdAndUpdate(storyId, {input, media: mediaUrl }, {new: true})
-    res.status(200).json(newData)
+    const newData = await Story.findByIdAndUpdate(storyId, input, {
+      new: true,
+    });
+    res.status(200).json(newData);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error edeting story. Please try again later");
   }
-})
+});
 
 //------Delete story------
 router.post("/api/deleteStory/:id", async (req, res) => {
   const { id } = req.params;
-  const {childId} = req.body
-  console.log(childId)
+  const { childId } = req.body;
   try {
     await User.findByIdAndUpdate(req.session.user._id, {
       $pull: { stories: id },
     });
     await Child.findByIdAndUpdate(childId, {
       $pull: { stories: id },
-    })
+    });
     await Story.findByIdAndDelete(id);
-    res.status(200).send("Succesfully deleted story")
+    res.status(200).send("Succesfully deleted story");
   } catch (err) {
     console.error(err);
     res.status(500).send("Error deleting data. Please try again later");
   }
 });
-
 module.exports = router;
