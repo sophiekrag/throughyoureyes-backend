@@ -90,17 +90,18 @@ router.get("/api/storyDetails/:id", async (req, res) => {
 });
 
 //------Edit story------
-router.post("/api/editStory", async (req, res) => {
-  const { input, storyId } = req.body;
-  console.log(input);
+router.post("/api/editStory/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, description, media } = req.body;
+
   try {
-    const newData = await Story.findByIdAndUpdate(storyId, input, {
+    const newData = await Story.findByIdAndUpdate(id, {title, description, media}, {
       new: true,
     });
-    res.status(200).json(newData);
+    res.status(200).json({...newData, message: "Your story has been updated"});
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error edeting story. Please try again later");
+    res.status(500).json({message: "Error editing story. Please try again later"});
   }
 });
 
