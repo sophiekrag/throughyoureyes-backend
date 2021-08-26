@@ -37,7 +37,7 @@ router.post("/api/signup", async (req, res) => {
       password: hash,
     });
     req.session.user = user;
-    res.status(201).json(user);
+    res.status(200).json(user);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error signing up user. Please try again later");
@@ -58,7 +58,7 @@ router.post("/api/login", async (req, res) => {
     const passwordMatch = bcrypt.compareSync(password, user.password);
     if (passwordMatch) {
       req.session.user = user;
-      res.status(201).json(user);
+      res.status(200).json(user);
     }
   } catch (error) {
     console.error(error);
