@@ -19,18 +19,6 @@ router.get("/api/myChildren", async (req, res) => {
   }
 });
 
-//------Get child------
-router.get("/api/getChild/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const response = await Child.findById({ _id: id });
-    res.status(200).json(response);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error getting data. Please try again later");
-  }
-});
-
 //------Create story------
 router.post("/api/createStory", async (req, res) => {
   console.log("Connected to createStory");

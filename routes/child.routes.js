@@ -84,8 +84,11 @@ router.post("/api/child/login", async (req, res) => {
 router.post("/api/findChild", async (req, res) => {
   const { id } = req.body;
   try {
+    const user = await User.findById({ _id: req.session.user._id });
     const child = await Child.findById({ _id: id });
-    if (child) {
+    if (user.children.includes(child._id)) {
+      res.status(300).json({ message: "Already connected to child" });
+    } else if (child) {
       await User.findByIdAndUpdate(
         { _id: req.session.user._id },
         { $push: { children: child._id } }
@@ -104,9 +107,9 @@ router.get("/api/getChild/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const child = await Child.findById({ _id: id });
-       res.status(200).json(child);
+    res.status(200).json(child);
   } catch (error) {
-    res.status(500).send("Error finding child. Please try again later")
+    res.status(500).send("Error finding child. Please try again later");
   }
 });
 
