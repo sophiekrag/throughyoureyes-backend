@@ -15,7 +15,7 @@ app.use(
   cors({
     credentials: true,
     origin: [
-      "https://hopeful-tesla-778db2.netlify.app"],
+      "/.*hopeful-tesla-778db2.netlify.app.*/"],
   })
 );
 
