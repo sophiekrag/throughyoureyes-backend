@@ -8,6 +8,7 @@ module.exports = (app) => {
       secret: process.env.SESS_SECRET,
       resave: false,
       saveUninitialized: true,
+      domain: "https://through-your-eyes.netlify.app",
       cookie: {
         domain: "https://through-your-eyes.netlify.app",
         httpOnly: false,
