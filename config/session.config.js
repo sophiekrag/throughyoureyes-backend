@@ -9,7 +9,9 @@ module.exports = (app) => {
       resave: true,
       saveUninitialized: false,
       cookie: {
-        sameSite: "lax",
+        domain: "https://through-your-eyes.netlify.app",
+        sameSite: "none",
+        secure: true,
         httpOnly: false,
         maxAge: 60000000, 
       },
