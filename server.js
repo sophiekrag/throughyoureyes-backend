@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: process.env.FRONTEND_POINT,
+    origin: process.env.FRONTEND_POINT || 'http://localhost:3000',
     credentials: true
   })
 );
