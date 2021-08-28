@@ -36,8 +36,8 @@ router.post("/api/signup", async (req, res) => {
       email,
       password: hash,
     });
-    req.session.user = user;
-    res.status(200).json(user);
+    req.session.user = newUser;
+    res.status(200).json(newUser);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error signing up user. Please try again later");
