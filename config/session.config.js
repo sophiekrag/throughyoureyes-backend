@@ -6,11 +6,10 @@ module.exports = (app) => {
   app.use(
     session({
       secret: process.env.SESS_SECRET,
-      resave: false,
-      saveUninitialized: true,
-      domain: "https://through-your-eyes.netlify.app",
+      resave: true,
+      saveUninitialized: false,
       cookie: {
-        domain: "https://through-your-eyes.netlify.app",
+        sameSite: "lax",
         httpOnly: false,
         maxAge: 60000000, 
       },

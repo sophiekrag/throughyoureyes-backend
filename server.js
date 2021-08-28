@@ -5,6 +5,7 @@ const cors = require("cors");
 
 const app = express();
 
+app.set("trust proxy", 1);
 //setup db
 require("./config/db.config");
 require("./config/session.config")(app);
