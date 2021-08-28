@@ -76,7 +76,7 @@ router.post("/api/logout", (req, res) => {
 router.get("/api/checkAuth", (req, res) => {
   const user = req.session.user;
   if (!user) {
-    return res.status(404).send("ERROR");
+    return res.status(500).send("ERROR");
   }
   res.status(200).json(user);
 });
