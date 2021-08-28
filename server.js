@@ -15,7 +15,7 @@ app.use(
   cors(
     {
     credentials: true,
-    origin: "https://hopeful-tesla-778db2.netlify.app",
+    origin: process.env.FRONTEND_POINT,
   }
   )
 );
