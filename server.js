@@ -12,11 +12,13 @@ require("./config/session.config")(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
-  cors({
-    credentials: true,
-    origin: [
-      "/.*hopeful-tesla-778db2.netlify.app.*/"],
-  })
+  cors(
+    // {
+  //   credentials: true,
+  //   origin: [
+  //     "/.*hopeful-tesla-778db2.netlify.app.*/"],
+  // }
+  )
 );
 
 app.use("/", require("./routes/auth.routes"));
