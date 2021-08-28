@@ -12,12 +12,10 @@ require("./config/session.config")(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
-  cors(
-    {
-    credentials: true,
+  cors({
     origin: process.env.FRONTEND_POINT,
-  }
-  )
+    credentials: true
+  })
 );
 
 app.use("/", require("./routes/auth.routes"));
