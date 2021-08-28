@@ -43,6 +43,7 @@ router.post("/api/createchild", async (req, res) => {
       firstname,
       lastname,
       password: hash,
+      creator: req.session.user,
     });
     await User.findByIdAndUpdate(
       { _id: req.session.user._id },

@@ -12,7 +12,7 @@ router.get("/api/myChildren", async (req, res) => {
     const result = await User.findById(req.session.user._id).populate(
       "children"
     );
-    res.status(201).json(result);
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error getting data. Please try again later");
@@ -22,10 +22,7 @@ router.get("/api/myChildren", async (req, res) => {
 //------Create story------
 router.post("/api/createStory", async (req, res) => {
   console.log("Connected to createStory");
-  const {
-    storyData: { title, description, media },
-    childId,
-  } = req.body;
+  const { title, description, media, childId } = req.body;
   try {
     if (!title || !description) {
       return res.status(422).json("Title or description is missing");
@@ -45,7 +42,7 @@ router.post("/api/createStory", async (req, res) => {
       { _id: req.session.user._id },
       { $push: { stories: newStory._id } }
     );
-    res.status(201).send("New story is created");
+    res.status(200).send("New story is created");
   } catch (error) {
     console.log(error);
     res.status(500).send("Error creating story. Please try again later");
@@ -83,13 +80,21 @@ router.post("/api/editStory/:id", async (req, res) => {
   const { title, description, media } = req.body;
 
   try {
-    const newData = await Story.findByIdAndUpdate(id, {title, description, media}, {
-      new: true,
-    });
-    res.status(200).json({...newData, message: "Your story has been updated"});
+    const newData = await Story.findByIdAndUpdate(
+      id,
+      { title, description, media },
+      {
+        new: true,
+      }
+    );
+    res
+      .status(200)
+      .json({ ...newData, message: "Your story has been updated" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({message: "Error editing story. Please try again later"});
+    res
+      .status(500)
+      .json({ message: "Error editing story. Please try again later" });
   }
 });
 
