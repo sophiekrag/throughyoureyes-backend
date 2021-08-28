@@ -15,8 +15,7 @@ app.use(
   cors({
     credentials: true,
     origin: [
-      "https://hopeful-tesla-778db2.netlify.app", "http://localhost:3000",
-    ],
+      "https://hopeful-tesla-778db2.netlify.app"],
   })
 );
 
