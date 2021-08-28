@@ -13,11 +13,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors(
-    // {
-  //   credentials: true,
-  //   origin: [
-  //     "/.*hopeful-tesla-778db2.netlify.app.*/"],
-  // }
+    {
+    credentials: true,
+    origin: "https://hopeful-tesla-778db2.netlify.app",
+  }
   )
 );
 
