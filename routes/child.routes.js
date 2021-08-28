@@ -48,7 +48,7 @@ router.post("/api/createchild", async (req, res) => {
       { _id: req.session.user._id },
       { $push: { children: newChild._id } }
     );
-    res.status(201).send("New child is created");
+    res.status(200).send("New child is created");
   } catch (error) {
     console.error(error);
     res.status(500).send("Error signing up user. Please try again later");
