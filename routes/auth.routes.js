@@ -77,7 +77,7 @@ router.get("/api/checkAuth", (req, res) => {
   const user = req.session.user;
   console.log(user)
   if (!user) {
-    return res.status(404).send("ERROR");
+    return res.status(401).send("You are not authorized for this page");
   }
   res.status(200).json(user);
   // res.status(200).send("true")
