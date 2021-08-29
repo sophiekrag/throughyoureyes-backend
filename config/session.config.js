@@ -10,7 +10,7 @@ module.exports = (app) => {
       cookie: {
        // domain: process.env.FRONTEND_POINT,
         // secure: true,
-        sameSite: true,
+        //sameSite: true,
         httpOnly: false,
         maxAge: 60000000, 
       },
