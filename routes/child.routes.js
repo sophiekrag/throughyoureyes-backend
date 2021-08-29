@@ -104,10 +104,11 @@ router.post("/api/findChild", async (req, res) => {
   }
 });
 
+//------Get child------
 router.get("/api/getChild/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const child = await Child.findById({ _id: id });
+    const child = await Child.findById({ _id: id }).populate("stories");
     res.status(200).json(child);
   } catch (error) {
     res.status(500).send("Error finding child. Please try again later");
