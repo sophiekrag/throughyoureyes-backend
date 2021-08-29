@@ -73,7 +73,7 @@ router.post("/api/child/login", async (req, res) => {
     const passwordMatch = bcrypt.compareSync(password, child.password);
     if (passwordMatch) {
       req.session.child = child;
-      res.status(200).json(Child);
+      res.status(200).json(child);
     }
   } catch (error) {
     console.error(error);
