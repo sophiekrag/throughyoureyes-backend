@@ -9,9 +9,9 @@ module.exports = (app) => {
       saveUninitialized: false,
       cookie: {
        // domain: process.env.FRONTEND_POINT,
-        // secure: true,
-        //sameSite: true,
-        httpOnly: false,
+        secure: true,
+        sameSite: "none",
+        httpOnly: true,
         maxAge: 60000000, 
       },
       store: MongoStore.create({
