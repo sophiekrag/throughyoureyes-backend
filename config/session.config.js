@@ -9,8 +9,8 @@ module.exports = (app) => {
       saveUninitialized: false,
       cookie: {
         domain: process.env.FRONTEND_POINT,
-        secure: true,
-        sameSite: 'none',
+        // secure: true,
+        sameSite: true,
         httpOnly: false,
         maxAge: 60000000, 
       },
