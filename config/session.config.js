@@ -9,9 +9,9 @@ module.exports = (app) => {
       saveUninitialized: false,
       cookie: {
         //domain: 'https://through-your-eyes.herokuapp.com',
-        // secure: true,
-        // sameSite: "none",
-        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        httpOnly: false,
         maxAge: 60000000, 
       },
       store: MongoStore.create({
