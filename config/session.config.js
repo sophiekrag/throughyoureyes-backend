@@ -8,7 +8,7 @@ module.exports = (app) => {
       resave: true,
       saveUninitialized: false,
       cookie: {
-        domain: process.env.FRONTEND_POINT,
+       // domain: process.env.FRONTEND_POINT,
         // secure: true,
         sameSite: true,
         httpOnly: false,
