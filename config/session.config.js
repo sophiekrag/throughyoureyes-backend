@@ -1,7 +1,6 @@
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
-/* eslint-disable no-undef */
 module.exports = (app) => {
   app.use(
     session({

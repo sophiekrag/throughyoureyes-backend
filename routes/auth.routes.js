@@ -74,12 +74,13 @@ router.post("/api/logout", (req, res) => {
 
 //------CheckAuth------
 router.get("/api/checkAuth", (req, res) => {
-  // const user = req.session.user;
-  // if (!user) {
-  //   return res.status(404).send("ERROR");
-  // }
-  // res.status(200).json(user);
-  res.status(200).send("true")
+  const user = req.session.user;
+  console.log(user)
+  if (!user) {
+    return res.status(404).send("ERROR");
+  }
+  res.status(200).json(user);
+  // res.status(200).send("true")
 });
 
 module.exports = router;
