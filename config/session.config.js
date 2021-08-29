@@ -6,10 +6,9 @@ module.exports = (app) => {
     session({
       secret: process.env.SESS_SECRET,
       resave: true,
-      saveUninitialized: false,
+      saveUninitialized: true,
       cookie: {
-        //domain: 'https://through-your-eyes.herokuapp.com',
-        // secure: true,
+        secure: true,
         sameSite: "none",
         httpOnly: false,
         maxAge: 60000000, 
