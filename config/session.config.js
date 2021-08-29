@@ -9,7 +9,7 @@ module.exports = (app) => {
       saveUninitialized: false,
       cookie: {
         //domain: 'https://through-your-eyes.herokuapp.com',
-        secure: true,
+        // secure: true,
         sameSite: "none",
         httpOnly: false,
         maxAge: 60000000, 
