@@ -7,33 +7,30 @@ const Child = require("../models/Child.model");
 const User = require("../models/User.model");
 
 //------Create------
-router.get("/api/createchild", (req, res) => {
-  res.send("Hello createchild");
-});
-
 router.post("/api/createchild", async (req, res) => {
   const {
     childData: { username, firstname, lastname, password },
   } = req.body;
   try {
     if (!username || !firstname || !lastname || !password) {
-      return res.status(422).send("All fields are required");
+      return res.status(422).json({ message: "All fields are required" });
     }
 
     const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     if (!regex.test(password)) {
       return res
         .status(422)
-        .send(
-          "Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter."
-        );
+        .json({
+          message:
+            "Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.",
+        });
     }
 
     const child = await Child.findOne({ username });
     if (child) {
       return res
         .status(422)
-        .send(`Child already exists with username ${username}`);
+        .json({message: `Child already exists with username ${username}`});
     }
 
     const hash = await bcrypt.hash(password, 10);
@@ -49,18 +46,14 @@ router.post("/api/createchild", async (req, res) => {
       { _id: req.session.user._id },
       { $push: { children: newChild._id } }
     );
-    res.status(200).send("New child is created");
+    res.status(200).json({message: "New child is created"});
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error signing up user. Please try again later");
+    res.status(500).json({message: "Error signing up user. Please try again later"});
   }
 });
 
 //------Login------
-router.get("/api/child/login", (req, res) => {
-  res.send("Hello child login");
-});
-
 router.post("/api/child/login", async (req, res) => {
   const {
     childData: { username, password },
@@ -68,7 +61,7 @@ router.post("/api/child/login", async (req, res) => {
   try {
     const child = await Child.findOne({ username });
     if (!child) {
-      return res.status(404).send("No child exists with that username");
+      return res.status(404).json({message: "No child exists with that username"});
     }
     const passwordMatch = bcrypt.compareSync(password, child.password);
     if (passwordMatch) {
@@ -77,7 +70,7 @@ router.post("/api/child/login", async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error loggin in child. Please try again later");
+    res.status(500).json({message: "Error loggin in child. Please try again later"});
   }
 });
 
@@ -94,13 +87,13 @@ router.post("/api/findChild", async (req, res) => {
         { _id: req.session.user._id },
         { $push: { children: child._id } }
       );
-      res.status(200).send("Succesfully connected to child");
+      res.status(200).json({message: "Succesfully connected to child"});
     } else {
-      return res.status(404).send("No child exists with that id");
+      return res.status(404).json({message: "No child exists with that id"});
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error finding child. Please try again later");
+    res.status(500).json({message: "Error finding child. Please try again later"});
   }
 });
 
@@ -111,7 +104,7 @@ router.get("/api/getChild/:id", async (req, res) => {
     const child = await Child.findById({ _id: id }).populate("stories");
     res.status(200).json(child);
   } catch (error) {
-    res.status(500).send("Error finding child. Please try again later");
+    res.status(500).json({message: "Error finding child. Please try again later"});
   }
 });
 

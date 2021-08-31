@@ -15,7 +15,9 @@ router.get("/api/myChildren", async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error getting data. Please try again later");
+    res
+      .status(500)
+      .json({ message: "Error getting data. Please try again later" });
   }
 });
 
@@ -25,7 +27,9 @@ router.post("/api/createStory", async (req, res) => {
   const { title, description, media, childId } = req.body;
   try {
     if (!title || !description) {
-      return res.status(422).json("Title or description is missing");
+      return res
+        .status(422)
+        .json({ message: "Title or description is missing" });
     }
     const newStory = await Story.create({
       title,
@@ -42,10 +46,12 @@ router.post("/api/createStory", async (req, res) => {
       { _id: req.session.user._id },
       { $push: { stories: newStory._id } }
     );
-    res.status(200).send("New story is created");
+    res.status(200).json({ message: "New story is created" });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error creating story. Please try again later");
+    res
+      .status(500)
+      .json({ message: "Error creating story. Please try again later" });
   }
 });
 
@@ -58,7 +64,9 @@ router.get("/api/myStories", async (req, res) => {
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error getting data. Please try again later");
+    res
+      .status(500)
+      .json({ message: "Error getting data. Please try again later" });
   }
 });
 
@@ -70,7 +78,9 @@ router.get("/api/storyDetails/:id", async (req, res) => {
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error getting data. Please try again later");
+    res
+      .status(500)
+      .json({ message: "Error getting data. Please try again later" });
   }
 });
 
@@ -87,9 +97,7 @@ router.post("/api/editStory/:id", async (req, res) => {
         new: true,
       }
     );
-    res
-      .status(200)
-      .json({ ...newData, message: "Your story has been updated" });
+    res.status(200).json({ message: "Your story has been updated" });
   } catch (error) {
     console.error(error);
     res
@@ -110,10 +118,12 @@ router.post("/api/deleteStory/:id", async (req, res) => {
       $pull: { stories: id },
     });
     await Story.findByIdAndDelete(id);
-    res.status(200).send("Succesfully deleted story");
+    res.status(200).json({ message: "Succesfully deleted story" });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error deleting data. Please try again later");
+    res
+      .status(500)
+      .json({ message: "Error deleting data. Please try again later" });
   }
 });
 module.exports = router;
