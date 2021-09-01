@@ -76,10 +76,10 @@ router.post("/api/child/login", async (req, res) => {
 
 //------Connect------
 router.post("/api/findChild", async (req, res) => {
-  const { id } = req.body;
+  const { childId } = req.body;
   try {
     const user = await User.findById({ _id: req.session.user._id });
-    const child = await Child.findById({ _id: id });
+    const child = await Child.findById({ _id: childId });
     if (user.children.includes(child._id)) {
       res.status(300).json({ message: "Already connected to child" });
     } else if (child) {
