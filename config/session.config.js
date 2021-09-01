@@ -6,12 +6,12 @@ module.exports = (app) => {
     session({
       secret: process.env.SESS_SECRET,
       resave: true,
-      key: "hello",
-      proxy: true,
+      //key: "hello",
+      proxy: process.env.PROXY,
       saveUninitialized: true,
       cookie:{
-        secure: true,
-        sameSite: "none",
+        secure: process.env.SECURE,
+        sameSite: process.env.SAMESITE,
         httpOnly: false,
         maxAge: 60000000, 
       },
