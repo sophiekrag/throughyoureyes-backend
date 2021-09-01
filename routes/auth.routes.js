@@ -12,7 +12,7 @@ router.post("/api/signup", async (req, res) => {
   } = req.body;
   try {
     if (!username || !email || !password) {
-      return res.status(422).json({ message: "All fields are required" });
+      return res.status(422).json({message: "All fields are required" } );
     }
 
     const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
@@ -28,7 +28,7 @@ router.post("/api/signup", async (req, res) => {
     if (user) {
       return res
         .status(422)
-        .json({ message: `User already exists with email ${email}` });
+        .json({message: `User already exists with email ${email}`});
     }
 
     const hash = await bcrypt.hash(password, 10);
@@ -39,7 +39,7 @@ router.post("/api/signup", async (req, res) => {
       password: hash,
     });
     req.session.user = newUser;
-    res.status(200).json({message: "Succesfully signed up"});
+    res.status(200).json({ message: "Succesfully signed up" });
   } catch (error) {
     console.error(error);
     res
@@ -57,30 +57,36 @@ router.post("/api/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({message: "No user exists with that email"});
+      return res.status(404).json({ message: "No user exists with that email" });
     }
     const passwordMatch = bcrypt.compareSync(password, user.password);
-    if (passwordMatch) {
+    if (!passwordMatch) {
+      res.status(404).json({ message: "Incorrect password" });
+    } else {
       req.session.user = user;
-      res.status(200).json({message: "Succesfully logged in"});
+      res.status(200).json({ message: "Succesfully logged in" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({message: "Error loggin in user. Please try again later"});
+    res
+      .status(500)
+      .json({ message: "Error loggin in user. Please try again later" });
   }
 });
 
 //------Logout------
 router.post("/api/logout", (req, res) => {
   delete req.session.user;
-  res.status(200).json({message: "User is logged out"});
+  res.status(200).json({ message: "User is logged out" });
 });
 
 //------CheckAuth------
 router.get("/api/checkAuth", (req, res) => {
   const user = req.session.user;
   if (!user) {
-    return res.status(401).json({message: "You are not authorized for this page"});
+    return res
+      .status(401)
+      .json({ message: "You are not authorized for this page" });
   }
   res.status(200).json(user);
 });
