@@ -6,7 +6,7 @@ module.exports = (app) => {
     session({
       secret: process.env.SESS_SECRET,
       resave: true,
-      key: process.env.KEY,
+      key: "Hello",
       proxy: process.env.PROXY,
       saveUninitialized: true,
       cookie:{
