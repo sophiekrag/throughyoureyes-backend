@@ -74,7 +74,7 @@ router.get("/api/myStories", async (req, res) => {
 router.get("/api/storyDetails/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await Story.findById(id).populate("child");
+    const result = await Story.findById(id).populate("child").populate('creator');
     res.status(201).json(result);
   } catch (error) {
     console.error(error);
