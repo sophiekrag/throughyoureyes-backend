@@ -1,17 +1,25 @@
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+console.log(process.env.NODE_ENV)
+const isProduction = process.env.NODE_ENV === "production" ? {
+  key: "connect.sid",
+  proxy: true,
+} : {}
+
+const isProduction2 = process.env.NODE_ENV === "production" ? {
+   secure: true,
+   sameSite: "none",
+} : { }
 
 module.exports = (app) => {
   app.use(
     session({
       secret: process.env.SESS_SECRET,
       resave: true,
-      key: "sid",
-      proxy: true,
+      ...isProduction,
       saveUninitialized: true,
       cookie:{
-        secure: true,
-        sameSite: "none",
+       ...isProduction2,
         httpOnly: false,
         maxAge: 60000000, 
       },
