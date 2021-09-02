@@ -6,7 +6,7 @@ const router = new Router();
 const Child = require("../models/Child.model");
 const User = require("../models/User.model");
 
-//------Create------
+//------Create/Signup------
 router.post("/api/createchild", async (req, res) => {
   const {
     childData: { username, firstname, lastname, password },
@@ -18,19 +18,17 @@ router.post("/api/createchild", async (req, res) => {
 
     const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     if (!regex.test(password)) {
-      return res
-        .status(422)
-        .json({
-          message:
-            "Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.",
-        });
+      return res.status(422).json({
+        message:
+          "Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.",
+      });
     }
 
     const child = await Child.findOne({ username });
     if (child) {
       return res
         .status(422)
-        .json({message: `Child already exists with username ${username}`});
+        .json({ message: `Child already exists with username ${username}` });
     }
 
     const hash = await bcrypt.hash(password, 10);
@@ -46,10 +44,12 @@ router.post("/api/createchild", async (req, res) => {
       { _id: req.session.user._id },
       { $push: { children: newChild._id } }
     );
-    res.status(200).json({message: "New child is created"});
+    res.status(200).json({ message: "New child is created" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({message: "Error signing up user. Please try again later"});
+    res
+      .status(500)
+      .json({ message: "Error signing up user. Please try again later" });
   }
 });
 
@@ -61,17 +61,40 @@ router.post("/api/child/login", async (req, res) => {
   try {
     const child = await Child.findOne({ username });
     if (!child) {
-      return res.status(404).json({message: "No child exists with that username"});
+      return res
+        .status(404)
+        .json({ message: "No child exists with that username" });
     }
     const passwordMatch = bcrypt.compareSync(password, child.password);
-    if (passwordMatch) {
-      req.session.child = child;
-      res.status(200).json(child);
+    if (!passwordMatch) {
+      res.status(404).json({ message: "Incorrect password" });
     }
+    req.session.child = child;
+    console.log(req.session.child);
+    res.status(200).json(child);
   } catch (error) {
     console.error(error);
-    res.status(500).json({message: "Error loggin in child. Please try again later"});
+    res
+      .status(500)
+      .json({ message: "Error loggin in child. Please try again later" });
   }
+});
+
+//------Logout-------
+router.post("/api/logout/child", (req, res) => {
+  delete req.session.child;
+  res.status(200).json({ message: "User is logged out" });
+});
+
+//------CheckAuth------
+router.get("/api/checkAuth/child", (req, res) => {
+  const child = req.session.child;
+  if (!child) {
+    return res
+      .status(401)
+      .json({ message: "You are not authorized for this page" });
+  }
+  res.status(200).json(child);
 });
 
 //------Connect------
@@ -87,13 +110,15 @@ router.post("/api/findChild", async (req, res) => {
         { _id: req.session.user._id },
         { $push: { children: child._id } }
       );
-      res.status(200).json({message: "Succesfully connected to child"});
+      res.status(200).json({ message: "Succesfully connected to child" });
     } else {
-      return res.status(404).json({message: "No child exists with that id"});
+      return res.status(404).json({ message: "No child exists with that id" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({message: "Error finding child. Please try again later"});
+    res
+      .status(500)
+      .json({ message: "Error finding child. Please try again later" });
   }
 });
 
@@ -104,7 +129,24 @@ router.get("/api/getChild/:id", async (req, res) => {
     const child = await Child.findById({ _id: id }).populate("stories");
     res.status(200).json(child);
   } catch (error) {
-    res.status(500).json({message: "Error finding child. Please try again later"});
+    res
+      .status(500)
+      .json({ message: "Error finding child. Please try again later" });
+  }
+});
+
+//------Get child profile stories------
+router.get("/api/childProfile/:id", async (req, res) => {
+  try {
+    const result = await Child.findById({
+      _id: req.session.child._id,
+    }).populate("stories");
+    res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error getting data. Please try again later" });
   }
 });
 
